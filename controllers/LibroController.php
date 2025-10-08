@@ -33,7 +33,8 @@ class LibroController {
     
     // Mostrar formulario para crear nuevo libro
     public function create() {
-        
+        // Obtener todos los firmantes para mostrar en el formulario
+        $firmantes = $this->firmanteModel->getAllFirmantes();
         require_once __DIR__ . '/../views/libros/create.php';
     }
     
@@ -42,17 +43,15 @@ class LibroController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'numero_referencia' => $_POST['numero_referencia'] ?? '',
-                'titulo' => $_POST['nombre'] ?? '',
+                'titulo' => $_POST['titulo'] ?? '',
                 'descripcion' => $_POST['descripcion'] ?? '',
                 'mes' => $_POST['mes'] ?? '',
-                'anio' => $_POST['anio'] ?? date('Y')
+                'año' => $_POST['año'] ?? date('Y'),
+                'dia' => $_POST['dia'] ?? date('j')
             ];
             
-            // Validaciones
-            if (!empty($_POST['firmantes'])) {
-                $firmantes = $_POST['firmantes'];
-                $this->libroModel->asignarFirmantes($libroId, $firmantes);
-            }
+            // Obtener firmantes seleccionados
+            $firmantesSeleccionados = $_POST['firmantes'] ?? [];
             $errors = [];
             if (empty($data['numero_referencia'])) {
                 $errors[] = 'El número de referencia es obligatorio';
@@ -71,16 +70,22 @@ class LibroController {
             
             if (empty($errors)) {
                 // Ajustar datos para el modelo
-            $modelData = [
-                'numero_referencia' => $data['numero_referencia'],
-                'titulo' => $data['titulo'],
-                'descripcion' => $data['descripcion'],
-                'mes' => $data['mes'],
-                'año' => $data['anio']
-            ];
+                $modelData = [
+                    'numero_referencia' => $data['numero_referencia'],
+                    'titulo' => $data['titulo'],
+                    'descripcion' => $data['descripcion'],
+                    'mes' => $data['mes'],
+                    'año' => $data['año'],
+                    'dia' => $data['dia']
+                ];
                 
                 $libroId = $this->libroModel->createLibro($modelData);
                 if ($libroId) {
+                    // Asignar firmantes si se seleccionaron
+                    if (!empty($firmantesSeleccionados)) {
+                        $this->firmaModel->asignarFirmantesALibro($libroId, $firmantesSeleccionados);
+                    }
+                    
                     $_SESSION['message'] = 'Libro creado exitosamente';
                     $_SESSION['message_type'] = 'success';
                     header('Location: index.php?controller=libro&action=index');

@@ -97,8 +97,8 @@ class Libro {
     public function createLibro($data) {
         try {
             $sql = "
-                INSERT INTO libros (numero_referencia, titulo, descripcion, mes, anio, created_by, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, NOW())
+                INSERT INTO libros (numero_referencia, titulo, descripcion, mes, año, dia, created_by, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
             ";
             
             $stmt = $this->pdo->prepare($sql);
@@ -107,7 +107,8 @@ class Libro {
                 $data['titulo'],
                 $data['descripcion'],
                 $data['mes'],
-                $data['anio'],
+                $data['año'],
+                $data['dia'],
                 $data['created_by'] ?? $_SESSION['user_id'] ?? 1
             ]);
             
@@ -125,7 +126,7 @@ class Libro {
         try {
             $sql = "
                 UPDATE libros 
-                SET numero_referencia = ?, titulo = ?, descripcion = ?, mes = ?, año = ?, updated_at = NOW()
+                SET numero_referencia = ?, titulo = ?, descripcion = ?, mes = ?, anio = ?, dia = ?, updated_at = NOW()
                 WHERE id = ?
             ";
             
@@ -136,6 +137,7 @@ class Libro {
                 $data['descripcion'],
                 $data['mes'],
                 $data['año'],
+                $data['dia'],
                 $id
             ]);
         } catch (PDOException $e) {

@@ -184,29 +184,50 @@ unset($_SESSION['errors'], $_SESSION['form_data']);
                                 </div>
                                 
                                 <!-- Responsable -->
-                                <div class="px-6 py-4 max-h-96 overflow-y-auto" id="firmantesContainer">
-                    <?php if (!empty($firmantes)): ?>
-                        <?php foreach ($firmantes as $firmante): ?>
-                            <div class="flex items-center mb-3">
-                                <input type="checkbox" 
-                                       name="firmantes[]" 
-                                       value="<?php echo $firmante['id']; ?>"
-                                       id="firmante_<?php echo $firmante['id']; ?>"
-                                       class="firmante-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                <label for="firmante_<?php echo $firmante['id']; ?>" class="ml-3 flex-1">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        <?php echo htmlspecialchars($firmante['nombre']); ?>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-users mr-2 text-blue-600"></i>
+                                        Asignar Firmantes
+                                    </label>
+                                    <div class="border border-gray-300 rounded-md bg-gray-50">
+                                        <div class="px-4 py-3 border-b border-gray-200 bg-white">
+                                            <div class="flex items-center justify-between">
+                                                <h4 class="text-sm font-medium text-gray-900">Seleccionar firmantes</h4>
+                                                <span class="text-xs text-gray-500" id="firmantes-seleccionados">0 seleccionados</span>
+                                            </div>
+                                        </div>
+                                        <div class="px-4 py-3 max-h-48 overflow-y-auto" id="firmantesContainer">
+                                            <?php if (!empty($firmantes)): ?>
+                                                <?php foreach ($firmantes as $firmante): ?>
+                                                    <div class="flex items-center mb-3">
+                                                        <input type="checkbox" 
+                                                               name="firmantes[]" 
+                                                               value="<?php echo $firmante['id']; ?>"
+                                                               id="firmante_<?php echo $firmante['id']; ?>"
+                                                               class="firmante-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                                        <label for="firmante_<?php echo $firmante['id']; ?>" class="ml-3 flex-1 cursor-pointer">
+                                                            <div class="text-sm font-medium text-gray-900">
+                                                                <?php echo htmlspecialchars($firmante['nombre']); ?>
+                                                            </div>
+                                                            <div class="text-xs text-gray-500">
+                                                                <?php echo htmlspecialchars($firmante['departamento'] ?? 'Sin departamento'); ?>
+                                                                <?php if (!empty($firmante['cargo'])): ?>
+                                                                    - <?php echo htmlspecialchars($firmante['cargo']); ?>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <p class="text-gray-500 text-center py-4">
+                                                    <i class="fas fa-info-circle mr-2"></i>
+                                                    No hay firmantes disponibles
+                                                </p>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
-                                    <div class="text-xs text-gray-500">
-                                        <?php echo htmlspecialchars($firmante['departamento']); ?>
-                                    </div>
-                                </label>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="text-gray-500 text-center py-4">No hay firmantes disponibles</p>
-                    <?php endif; ?>
-                </div>
+                                    <small class="text-gray-500 mt-1 block">Selecciona los firmantes que participarán en este libro</small>
+                                </div>
                             </div>
                             
                             <!-- Descripción -->
@@ -252,7 +273,8 @@ unset($_SESSION['errors'], $_SESSION['form_data']);
                                 <h3 class="text-sm font-medium text-blue-900 mb-2">Información importante</h3>
                                 <ul class="text-sm text-blue-800 space-y-1">
                                     <li>• El número de referencia debe ser único en el sistema</li>
-                                    <li>• Una vez creado el libro, podrá asignar firmantes desde la vista de detalles</li>
+                                    <li>• Puede asignar firmantes directamente al crear el libro</li>
+                                    <li>• Los firmantes seleccionados se crearán automáticamente en el sistema</li>
                                     <li>• Los campos marcados con (*) son obligatorios</li>
                                 </ul>
                             </div>
@@ -270,13 +292,31 @@ unset($_SESSION['errors'], $_SESSION['form_data']);
             const form = document.getElementById('create-libro-form');
             const generateRefBtn = document.getElementById('generate-ref');
             const numeroRefInput = document.getElementById('numero_referencia');
-            const nombreInput = document.getElementById('nombre');
+            const tituloInput = document.getElementById('titulo');
             const descripcionTextarea = document.getElementById('descripcion');
             const charCount = document.getElementById('char-count');
             const submitBtn = document.getElementById('submit-btn');
+            const firmantesSeleccionados = document.getElementById('firmantes-seleccionados');
+            const firmanteCheckboxes = document.querySelectorAll('.firmante-checkbox');
             
             // Auto-focus en el primer campo
             numeroRefInput.focus();
+            
+            // Función para actualizar contador de firmantes seleccionados
+            function actualizarContadorFirmantes() {
+                if (firmantesSeleccionados) {
+                    const seleccionados = document.querySelectorAll('.firmante-checkbox:checked').length;
+                    firmantesSeleccionados.textContent = seleccionados + ' seleccionados';
+                }
+            }
+            
+            // Agregar event listeners a los checkboxes de firmantes
+            firmanteCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', actualizarContadorFirmantes);
+            });
+            
+            // Inicializar contador
+            actualizarContadorFirmantes();
             
             // Generar número de referencia automático
             if (generateRefBtn) {
@@ -316,9 +356,9 @@ unset($_SESSION['errors'], $_SESSION['form_data']);
                 }
             });
             
-            // Validación en tiempo real para nombre
-            if (nombreInput) {
-                nombreInput.addEventListener('blur', function() {
+            // Validación en tiempo real para título
+            if (tituloInput) {
+                tituloInput.addEventListener('blur', function() {
                     const feedback = this.parentNode.querySelector('.invalid-feedback');
                     if (!this.value.trim()) {
                         this.classList.add('border-red-500');
@@ -336,9 +376,9 @@ unset($_SESSION['errors'], $_SESSION['form_data']);
                     // Validar campos requeridos
                     let isValid = true;
                     
-                    if (nombreInput && !nombreInput.value.trim()) {
-                        nombreInput.classList.add('border-red-500');
-                        const feedback = nombreInput.parentNode.querySelector('.invalid-feedback');
+                    if (tituloInput && !tituloInput.value.trim()) {
+                        tituloInput.classList.add('border-red-500');
+                        const feedback = tituloInput.parentNode.querySelector('.invalid-feedback');
                         if (feedback) feedback.classList.remove('hidden');
                         isValid = false;
                     }
