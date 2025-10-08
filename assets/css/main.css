@@ -1,0 +1,347 @@
+/* Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Components */
+@layer components {
+    .btn-custom {
+        @apply px-4 py-2 rounded-lg font-medium transition-all duration-300 ease-in-out;
+    }
+    
+    .btn-custom:hover {
+        @apply -translate-y-0.5 shadow-lg;
+    }
+    
+    .card-custom {
+        @apply bg-white rounded-lg shadow-card transition-shadow duration-300;
+    }
+    
+    .card-custom:hover {
+        @apply shadow-card-hover;
+    }
+    
+    .sidebar-link {
+        @apply flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary-600 transition-colors duration-200;
+    }
+    
+    .sidebar-link.active {
+        @apply bg-primary-50 text-primary-600 border-r-4 border-primary-600;
+    }
+    
+    /* Sidebar Layout Fix */
+    .main-content {
+        @apply ml-0 md:ml-64 transition-all duration-300 ease-in-out;
+    }
+    
+    .sidebar-fixed {
+        @apply fixed left-0 top-0 h-full w-64 bg-gray-100 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-40;
+    }
+    
+    .stats-card {
+        @apply bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg p-6 shadow-card;
+    }
+    
+    .stats-card-2 {
+        @apply bg-gradient-to-r from-success-500 to-success-600 text-white rounded-lg p-6 shadow-card;
+    }
+    
+    .stats-card-3 {
+        @apply bg-gradient-to-r from-warning-500 to-warning-600 text-white rounded-lg p-6 shadow-card;
+    }
+    
+    .stats-card-4 {
+        @apply bg-gradient-to-r from-secondary-500 to-secondary-600 text-white rounded-lg p-6 shadow-card;
+    }
+}
+
+/* Custom Utilities */
+@layer utilities {
+    .text-shadow {
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    .animate-slide-in {
+        animation: slideIn 0.3s ease-out;
+    }
+}
+
+/* Base Styles */
+@layer base {
+    body {
+        @apply font-sans text-gray-900 bg-gray-50;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-semibold text-gray-900;
+    }
+    
+    .container {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+}
+
+/* Estilos personalizados adicionales */
+.btn:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.sidebar-link:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: -2px;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Botones mejorados */
+.btn-outline {
+    @apply border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
+
+.btn-ghost {
+    @apply bg-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900;
+}
+
+.btn-loading {
+    @apply opacity-75 cursor-not-allowed;
+}
+
+/* Sistema de notificaciones toast */
+.toast-container {
+    @apply fixed top-4 right-4 z-50 space-y-2;
+}
+
+.toast {
+    @apply px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 max-w-sm;
+}
+
+.toast.show {
+    @apply translate-x-0 opacity-100;
+}
+
+.toast.hide {
+    @apply translate-x-full opacity-0;
+}
+
+/* Estados de carga */
+.loading {
+    @apply relative overflow-hidden;
+}
+
+.loading::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Mejoras de formularios */
+.form-group {
+    @apply mb-4;
+}
+
+.form-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.form-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors;
+}
+
+.form-input:invalid {
+    @apply border-red-300 focus:ring-red-500 focus:border-red-500;
+}
+
+.form-error {
+    @apply text-sm text-red-600 mt-1;
+}
+
+.form-help {
+    @apply text-sm text-gray-500 mt-1;
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+    @apply flex items-center space-x-2 text-sm text-gray-600;
+}
+
+.breadcrumb-item {
+    @apply flex items-center;
+}
+
+.breadcrumb-separator {
+    @apply mx-2 text-gray-400;
+}
+
+/* Badges de estado */
+.badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-success {
+    @apply bg-green-100 text-green-800;
+}
+
+.badge-warning {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.badge-error {
+    @apply bg-red-100 text-red-800;
+}
+
+.badge-info {
+    @apply bg-blue-100 text-blue-800;
+}
+
+/* Tablas responsive */
+.table-responsive {
+    @apply overflow-x-auto;
+}
+
+.table-responsive table {
+    @apply min-w-full;
+}
+
+@media (max-width: 768px) {
+    .table-responsive table,
+    .table-responsive thead,
+    .table-responsive tbody,
+    .table-responsive th,
+    .table-responsive td,
+    .table-responsive tr {
+        display: block;
+    }
+    
+    .table-responsive thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    .table-responsive tr {
+        @apply border border-gray-200 mb-4 rounded-lg p-4;
+    }
+    
+    .table-responsive td {
+        @apply border-none relative pl-8 pb-2;
+    }
+    
+    .table-responsive td:before {
+        content: attr(data-label) ': ';
+        @apply absolute left-0 font-semibold text-gray-600;
+    }
+}
+
+/* Animaciones suaves */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+/* Utilidades adicionales */
+.text-truncate {
+    @apply truncate;
+}
+
+.shadow-soft {
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+}
+
+.border-dashed {
+    border-style: dashed;
+}
+
+/* Estados hover mejorados */
+.hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================ */
+/* DataTables - Estética Tailwind*/
+/* ============================ */
+.dataTables_wrapper {
+    padding: 0.5rem 0.5rem 0.75rem 0.5rem;
+}
+
+.dataTables_wrapper .dataTables_info {
+    color: #4b5563; /* text-gray-600 */
+    font-size: 0.875rem; /* text-sm */
+    padding: 1rem 1rem; /* más espacio alrededor del mensaje */
+}
+
+.dataTables_wrapper .dt-buttons {
+    padding: 1rem; /* alinear con info */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    padding: 1rem; /* alinear con info */
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    border: 1px solid #e5e7eb; /* border-gray-200 */
+    border-radius: 0.375rem; /* rounded-md */
+    padding: 0.375rem 0.625rem; /* px-2.5 py-1.5 */
+    margin: 0 0.125rem;
+    background: #fff; /* bg-white */
+    color: #374151 !important; /* text-gray-700 */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #3b82f6 !important; /* blue-500 */
+    color: #fff !important;
+    border-color: #3b82f6;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+    background: #f9fafb !important; /* gray-50 */
+    color: #9ca3af !important; /* gray-400 */
+    border-color: #e5e7eb !important;
+    cursor: not-allowed;
+}
+
+/* Encabezados y celdas compactas sin perder legibilidad */
+#libros-table thead th {
+    background-color: #f9fafb; /* gray-50 */
+}
+
+#libros-table td, #libros-table th {
+    vertical-align: middle;
+}
+
+#libros-table tbody tr:hover {
+    background-color: #f9fafb; /* hover:bg-gray-50 */
+}
