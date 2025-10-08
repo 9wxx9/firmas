@@ -19,6 +19,9 @@ try {
                 case 'login':
                     $authController->login();
                     break;
+                case 'register':
+                    $authController->register();
+                    break;
                 case 'logout':
                     $authController->logout();
                     break;

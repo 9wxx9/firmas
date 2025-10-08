@@ -30,6 +30,18 @@ class User {
             return false;
         }
     }
+
+    public function register($username, $password, $email, $telefono, $rol) {
+        try {
+            // Hash de la contraseña
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            
+            $stmt = $this->pdo->prepare("INSERT INTO usuarios (username, password, email, telefono, rol) VALUES (?, ?, ?, ?, ?)");
+            return $stmt->execute([$username, $hashedPassword, $email, $telefono, $rol]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
     
     public function getUserByRememberToken($token) {
         try {

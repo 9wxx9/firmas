@@ -47,6 +47,37 @@ class AuthController {
             exit;
         }
     }
+
+    public function register() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_POST['username'] ?? '';
+            $password = $_POST['password'] ?? '';
+            $confirm_password = $_POST['confirm_password'] ?? ''; // Corregir typo
+            $email = $_POST['email'] ?? '';
+            $telefono = $_POST['telefono'] ?? '';
+            $rol = $_POST['rol'] ?? '';
+    
+            if (empty($username) || empty($password) || empty($rol)) {
+                $this->redirectWithError('Por favor, completa todos los campos.','register');
+                return;
+            } elseif($password !== $confirm_password) {
+                $this->redirectWithError('Las contraseñas no coinciden.','register');
+                return;
+            } elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $this->redirectWithError('El email no es válido.','register');
+                return;
+            }
+            
+            $user = $this->userModel->register($username, $password, $email, $telefono, $rol);
+            if ($user) {
+                $this->redirectWithSuccess('Usuario registrado correctamente.','register');
+                return;
+            } else {
+                $this->redirectWithError('Error al registrar el usuario.','register');
+                return;
+            }
+        }
+    }
     
     public function logout() {
         // Limpiar sesión
@@ -62,10 +93,36 @@ class AuthController {
         exit;
     }
     
-    private function redirectWithError($message) {
+      // Método unificado para redirecciones
+      private function redirectWithError($message, $page = 'login') {
         $_SESSION['error_message'] = $message;
-        header('Location: ../index.php');
+        
+        switch ($page) {
+            case 'register':
+                header('Location: ../register.php');
+                break;
+            case 'login':
+            default:
+                header('Location: ../index.php');
+                break;
+        }
+        exit;
+    }
+    
+    private function redirectWithSuccess($message, $page = 'login') {
+        $_SESSION['success_message'] = $message;
+        
+        switch ($page) {
+            case 'register':
+                header('Location: ../register.php');
+                break;
+            case 'login':
+            default:
+                header('Location: ../index.php');
+                break;
+        }
         exit;
     }
 }
+
 ?>
