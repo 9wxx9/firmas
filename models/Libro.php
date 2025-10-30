@@ -1,13 +1,16 @@
 <?php
 
-class Libro {
+class Libro
+{
     private $pdo;
-    
-    public function __construct($pdo) {
+
+    public function __construct($pdo)
+    {
         $this->pdo = $pdo;
     }
-    
-    public function getAllLibros() {
+
+    public function getAllLibros()
+    {
         try {
             $sql = "
                 SELECT 
@@ -21,7 +24,7 @@ class Libro {
                 GROUP BY l.id
                 ORDER BY l.id DESC
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -31,7 +34,8 @@ class Libro {
         }
     }
 
-    public function getAllWithFirmantes() {
+    public function getAllWithFirmantes()
+    {
         try {
             $sql = "
                 SELECT 
@@ -54,9 +58,134 @@ class Libro {
             return [];
         }
     }
+
+
+    // En models/Libro.php
+
+public function getLibrosPendientesPorUsuario($emailUsuario)
+{
+    $query = "SELECT DISTINCT 
+                l.id,
+                l.numero_referencia,
+                l.titulo,
+                l.descripcion,
+                l.mes,
+                l.año,
+                l.dia,
+                f.id as firma_id,
+                f.orden,
+                f.estado,
+                f.fecha_firma,
+                firm.nombre as firmante_nombre,
+                firm.cargo as firmante_cargo,
+                firm.departamento as firmante_departamento
+            FROM libros l
+            INNER JOIN firmas f ON l.id = f.libro_id
+            INNER JOIN firmantes firm ON f.firmante_id = firm.id
+            WHERE firm.email = :email
+            AND f.estado = 'pendiente'
+            AND firm.activo = 1
+            ORDER BY l.created_at DESC, f.orden ASC";
     
-    
-    public function getLibroById($id) {
+    try {
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':email', $emailUsuario, PDO::PARAM_STR);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error en getLibrosPendientesPorUsuario: " . $e->getMessage());
+        return [];
+    }
+}
+
+      // NUEVOS MÉTODOS para el dashboard
+
+     /**
+     * Obtener los libros/diarios más recientes
+     */
+    public function obtenerRecientes($limit = 5)
+    {
+        try {
+            $sql = "SELECT 
+                        l.id,
+                        l.numero_referencia,
+                        l.titulo,
+                        l.descripcion,
+                        l.mes,
+                        l.año as anio,
+                        l.estado,
+                        l.created_at,
+                        l.escaneado,
+                        COUNT(fi.id) as total_firmas,
+                        COUNT(CASE WHEN fi.estado = 'firmado' THEN 1 END) as firmas_completadas
+                    FROM libros l
+                    LEFT JOIN firmas fi ON l.id = fi.libro_id
+                    GROUP BY l.id
+                    ORDER BY l.created_at DESC
+                    LIMIT :limit";
+            
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en obtenerRecientes: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Obtener actividad reciente del sistema
+     */
+    public function obtenerActividadReciente($limit = 10)
+    {
+        try {
+            $sql = "SELECT 
+                        'firma' as tipo,
+                        fi.id,
+                        fi.fecha_firma as created_at,
+                        fi.estado,
+                        l.titulo as diario_titulo,
+                        l.numero_referencia,
+                        f.nombre as firmante_nombre,
+                        CASE 
+                            WHEN fi.estado = 'firmado' THEN 'Firma completada'
+                            ELSE 'Firma pendiente'
+                        END as accion
+                    FROM firmas fi
+                    INNER JOIN libros l ON fi.libro_id = l.id
+                    INNER JOIN firmantes f ON fi.firmante_id = f.id
+                    WHERE fi.fecha_firma IS NOT NULL
+                    
+                    UNION ALL
+                    
+                    SELECT 
+                        'libro' as tipo,
+                        l.id,
+                        l.created_at,
+                        l.estado,
+                        l.titulo as diario_titulo,
+                        l.numero_referencia,
+                        NULL as firmante_nombre,
+                        'Diario registrado' as accion
+                    FROM libros l
+                    
+                    ORDER BY created_at DESC
+                    LIMIT :limit";
+            
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en obtenerActividadReciente: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function getLibroById($id)
+    {
         try {
             $sql = "
                 SELECT 
@@ -65,7 +194,7 @@ class Libro {
                 FROM libros l
                 WHERE l.id = ?
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -74,17 +203,39 @@ class Libro {
             return false;
         }
     }
-    
-    public function existeNumeroReferencia($numeroReferencia, $excludeId = null) {
+
+    public function getTotalLibros()
+    {
+
+        try {
+            $sql = "SELECT 
+            
+            (SELECT COUNT(*) FROM libros) AS total_diarios,
+            (SELECT COUNT(*) FROM usuarios) AS total_usuarios,
+            (SELECT COUNT(*) FROM firmas WHERE estado = 'firmado') AS total_firmas_completas,
+            (SELECT COUNT(*) FROM firmas WHERE estado = 'pendiente') AS total_firmas_pendientes
+            ";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getTotalDiarios: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function existeNumeroReferencia($numeroReferencia, $excludeId = null)
+    {
         try {
             $sql = "SELECT COUNT(*) FROM libros WHERE numero_referencia = ?";
             $params = [$numeroReferencia];
-            
+
             if ($excludeId) {
                 $sql .= " AND id != ?";
                 $params[] = $excludeId;
             }
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute($params);
             return $stmt->fetchColumn() > 0;
@@ -93,14 +244,15 @@ class Libro {
             return false;
         }
     }
-    
-    public function createLibro($data) {
+
+    public function createLibro($data)
+    {
         try {
             $sql = "
                 INSERT INTO libros (numero_referencia, titulo, descripcion, mes, año, dia, created_by, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $result = $stmt->execute([
                 $data['numero_referencia'],
@@ -111,7 +263,7 @@ class Libro {
                 $data['dia'],
                 $data['created_by'] ?? $_SESSION['user_id'] ?? 1
             ]);
-            
+
             if ($result) {
                 return $this->pdo->lastInsertId();
             }
@@ -121,15 +273,16 @@ class Libro {
             return false;
         }
     }
-    
-    public function updateLibro($id, $data) {
+
+    public function updateLibro($id, $data)
+    {
         try {
             $sql = "
                 UPDATE libros 
-                SET numero_referencia = ?, titulo = ?, descripcion = ?, mes = ?, anio = ?, dia = ?, updated_at = NOW()
+                SET numero_referencia = ?, titulo = ?, descripcion = ?, mes = ?, año = ?, dia = ?, updated_at = NOW()
                 WHERE id = ?
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             return $stmt->execute([
                 $data['numero_referencia'],
@@ -145,13 +298,14 @@ class Libro {
             return false;
         }
     }
-    
-    public function deleteLibro($id) {
+
+    public function deleteLibro($id)
+    {
         try {
             // Primero eliminar las firmas asociadas
             $stmt = $this->pdo->prepare("DELETE FROM firmas WHERE libro_id = ?");
             $stmt->execute([$id]);
-            
+
             // Luego eliminar el libro
             $stmt = $this->pdo->prepare("DELETE FROM libros WHERE id = ?");
             return $stmt->execute([$id]);
@@ -160,8 +314,9 @@ class Libro {
             return false;
         }
     }
-    
-    public function getLibrosByUser($userId) {
+
+    public function getLibrosByUser($userId)
+    {
         try {
             $sql = "
                 SELECT 
@@ -177,13 +332,26 @@ class Libro {
                 GROUP BY l.id
                 ORDER BY l.created_at DESC
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$userId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Error en getLibrosByUser: " . $e->getMessage());
             return [];
+        }
+    }
+    // ... existing code ...
+
+    public function updateEscaneado($id, $escaneado)
+    {
+        try {
+            $sql = "UPDATE libros SET escaneado = ?, updated_at = NOW() WHERE id = ?";
+            $stmt = $this->pdo->prepare($sql);
+            return $stmt->execute([$escaneado ? 1 : 0, $id]);
+        } catch (PDOException $e) {
+            error_log("Error en updateEscaneado: " . $e->getMessage());
+            return false;
         }
     }
 }

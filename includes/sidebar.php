@@ -1,4 +1,3 @@
-
 <!-- Sidebar -->
 <nav id="sidebar" class="sidebar-fixed">
     <div class="sticky top-0 pt-3">
@@ -81,29 +80,29 @@
 
             <!-- Reportes (Solo Admin) -->
             <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin'): ?>
-            <li>
-                <button class="w-full flex items-center justify-between px-3 py-2 text-gray-700 hover:bg-gray-200 rounded-md transition-colors" onclick="toggleSubmenu('reportesSubmenu')">
-                    <div class="flex items-center">
-                        <i class="fas fa-chart-bar mr-2"></i>
-                        Reportes
+                <li>
+                    <button class="w-full flex items-center justify-between px-3 py-2 text-gray-700 hover:bg-gray-200 rounded-md transition-colors" onclick="toggleSubmenu('reportesSubmenu')">
+                        <div class="flex items-center">
+                            <i class="fas fa-chart-bar mr-2"></i>
+                            Reportes
+                        </div>
+                        <i class="fas fa-chevron-down transform transition-transform" id="reportesSubmenu-icon"></i>
+                    </button>
+                    <div class="hidden ml-6 mt-1 space-y-1" id="reportesSubmenu">
+                        <a class="block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded" href="index.php?controller=reporte&action=estadisticas">
+                            <i class="fas fa-chart-line mr-2"></i>
+                            Estadísticas
+                        </a>
+                        <a class="block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded" href="index.php?controller=admin&action=usuarios">
+                            <i class="fas fa-users mr-2"></i>
+                            Usuarios
+                        </a>
+                        <a class="block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded" href="index.php?controller=admin&action=usuarios">
+                            <i class="fas fa-solid fa-file mr-2"></i>
+                            generar reporte
+                        </a>
                     </div>
-                    <i class="fas fa-chevron-down transform transition-transform" id="reportesSubmenu-icon"></i>
-                </button>
-                <div class="hidden ml-6 mt-1 space-y-1" id="reportesSubmenu">
-                    <a class="block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded" href="index.php?controller=reporte&action=estadisticas">
-                        <i class="fas fa-chart-line mr-2"></i>
-                        Estadísticas
-                    </a>
-                    <a class="block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded" href="index.php?controller=admin&action=usuarios">
-                        <i class="fas fa-users mr-2"></i>
-                        Usuarios
-                    </a>
-                    <a class="block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded" href="index.php?controller=admin&action=usuarios">
-                        <i class="fas fa-solid fa-file mr-2"></i>
-                        generar reporte
-                    </a>
-                </div>
-            </li>
+                </li>
             <?php endif; ?>
 
             <!-- Perfil -->
@@ -133,21 +132,21 @@
 </button>
 
 <script>
-function toggleSubmenu(submenuId) {
-    const submenu = document.getElementById(submenuId);
-    const icon = document.getElementById(submenuId + '-icon');
-    
-    if (submenu.classList.contains('hidden')) {
-        submenu.classList.remove('hidden');
-        icon.classList.add('rotate-180');
-    } else {
-        submenu.classList.add('hidden');
-        icon.classList.remove('rotate-180');
-    }
-}
+    function toggleSubmenu(submenuId) {
+        const submenu = document.getElementById(submenuId);
+        const icon = document.getElementById(submenuId + '-icon');
 
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('-translate-x-full');
-}
+        if (submenu.classList.contains('hidden')) {
+            submenu.classList.remove('hidden');
+            icon.classList.add('rotate-180');
+        } else {
+            submenu.classList.add('hidden');
+            icon.classList.remove('rotate-180');
+        }
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('-translate-x-full');
+    }
 </script>

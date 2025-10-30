@@ -1,13 +1,16 @@
 <?php
 
-class Firma {
+class Firma
+{
     private $pdo;
-    
-    public function __construct($pdo) {
+
+    public function __construct($pdo)
+    {
         $this->pdo = $pdo;
     }
-    
-    public function getFirmasByLibro($libroId) {
+
+    public function getFirmasByLibro($libroId)
+    {
         try {
             $sql = "
                 SELECT 
@@ -21,7 +24,7 @@ class Firma {
                 WHERE f.libro_id = ?
                 ORDER BY f.orden ASC, f.created_at ASC
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$libroId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -30,8 +33,9 @@ class Firma {
             return [];
         }
     }
-    
-    public function getFirmaById($id) {
+
+    public function getFirmaById($id)
+    {
         try {
             $sql = "
                 SELECT 
@@ -46,7 +50,7 @@ class Firma {
                 LEFT JOIN libros l ON f.libro_id = l.id
                 WHERE f.id = ?
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -55,14 +59,15 @@ class Firma {
             return false;
         }
     }
-    
-    public function createFirma($data) {
+
+    public function createFirma($data)
+    {
         try {
             $sql = "
                 INSERT INTO firmas (libro_id, firmante_id, estado, orden, observaciones, created_at)
                 VALUES (?, ?, ?, ?, ?, NOW())
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $result = $stmt->execute([
                 $data['libro_id'],
@@ -71,7 +76,7 @@ class Firma {
                 $data['orden'] ?? 1,
                 $data['observaciones'] ?? null
             ]);
-            
+
             if ($result) {
                 return $this->pdo->lastInsertId();
             }
@@ -81,20 +86,21 @@ class Firma {
             return false;
         }
     }
-    
-    public function updateFirma($id, $data) {
+
+    public function updateFirma($id, $data)
+    {
         try {
             $sql = "
                 UPDATE firmas 
                 SET estado = ?, observaciones = ?, fecha_firma = ?, updated_at = NOW()
                 WHERE id = ?
             ";
-            
+
             $fechaFirma = null;
             if (isset($data['estado']) && $data['estado'] === 'firmado') {
                 $fechaFirma = date('Y-m-d H:i:s');
             }
-            
+
             $stmt = $this->pdo->prepare($sql);
             return $stmt->execute([
                 $data['estado'],
@@ -107,8 +113,9 @@ class Firma {
             return false;
         }
     }
-    
-    public function deleteFirma($id) {
+
+    public function deleteFirma($id)
+    {
         try {
             $stmt = $this->pdo->prepare("DELETE FROM firmas WHERE id = ?");
             return $stmt->execute([$id]);
@@ -117,8 +124,9 @@ class Firma {
             return false;
         }
     }
-    
-    public function getFirmasPendientesByFirmante($firmanteId) {
+
+    public function getFirmasPendientesByFirmante($firmanteId)
+    {
         try {
             $sql = "
                 SELECT 
@@ -131,7 +139,7 @@ class Firma {
                 WHERE f.firmante_id = ? AND f.estado = 'pendiente'
                 ORDER BY f.created_at ASC
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$firmanteId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -140,8 +148,9 @@ class Firma {
             return [];
         }
     }
-    
-    public function getEstadisticasFirmas() {
+
+    public function getEstadisticasFirmas()
+    {
         try {
             $sql = "
                 SELECT 
@@ -151,7 +160,7 @@ class Firma {
                     SUM(CASE WHEN estado = 'rechazado' THEN 1 ELSE 0 END) as rechazadas
                 FROM firmas
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -165,22 +174,25 @@ class Firma {
             ];
         }
     }
-    
-    public function marcarComoFirmado($id, $observaciones = null) {
+
+    public function marcarComoFirmado($id, $observaciones = null)
+    {
         return $this->updateFirma($id, [
             'estado' => 'firmado',
             'observaciones' => $observaciones
         ]);
     }
-    
-    public function marcarComoRechazado($id, $observaciones = null) {
+
+    public function marcarComoRechazado($id, $observaciones = null)
+    {
         return $this->updateFirma($id, [
             'estado' => 'rechazado',
             'observaciones' => $observaciones
         ]);
     }
-    
-    public function getProximoOrden($libroId) {
+
+    public function getProximoOrden($libroId)
+    {
         try {
             $sql = "SELECT COALESCE(MAX(orden), 0) + 1 as proximo_orden FROM firmas WHERE libro_id = ?";
             $stmt = $this->pdo->prepare($sql);
@@ -192,15 +204,16 @@ class Firma {
             return 1;
         }
     }
-    
-    public function asignarFirmantesALibro($libroId, $firmantes) {
+
+    public function asignarFirmantesALibro($libroId, $firmantes)
+    {
         try {
             $this->pdo->beginTransaction();
-            
+
             // Eliminar firmantes existentes del libro
             $stmt = $this->pdo->prepare("DELETE FROM firmas WHERE libro_id = ?");
             $stmt->execute([$libroId]);
-            
+
             // Asignar nuevos firmantes
             $orden = 1;
             foreach ($firmantes as $firmanteId) {
@@ -208,12 +221,12 @@ class Firma {
                     INSERT INTO firmas (libro_id, firmante_id, estado, orden, created_at)
                     VALUES (?, ?, 'pendiente', ?, NOW())
                 ";
-                
+
                 $stmt = $this->pdo->prepare($sql);
                 $stmt->execute([$libroId, $firmanteId, $orden]);
                 $orden++;
             }
-            
+
             $this->pdo->commit();
             return true;
         } catch (PDOException $e) {
@@ -222,20 +235,21 @@ class Firma {
             return false;
         }
     }
-    
-    public function updateEstadoFirma($firmaId, $nuevoEstado) {
+
+    public function updateEstadoFirma($firmaId, $nuevoEstado)
+    {
         try {
             $fechaFirma = null;
             if ($nuevoEstado === 'firmado') {
                 $fechaFirma = date('Y-m-d H:i:s');
             }
-            
+
             $sql = "
                 UPDATE firmas 
                 SET estado = ?, fecha_firma = ?, updated_at = NOW()
                 WHERE id = ?
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             return $stmt->execute([$nuevoEstado, $fechaFirma, $firmaId]);
         } catch (PDOException $e) {

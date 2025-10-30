@@ -13,7 +13,7 @@ window.App = {
     },
 
     // Inicialización de la aplicación
-    init: function() {
+    init: function () {
         this.initToasts();
         this.initSidebar();
         this.initTables();
@@ -22,12 +22,12 @@ window.App = {
     },
 
     // Sistema de notificaciones toast
-    showToast: function(message, type = 'info', duration = null) {
+    showToast: function (message, type = 'info', duration = null) {
         duration = duration || this.config.toastDuration;
-        
+
         const toast = document.createElement('div');
         toast.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300`;
-        
+
         // Estilos según el tipo
         const styles = {
             success: 'bg-green-500 text-white',
@@ -35,7 +35,7 @@ window.App = {
             warning: 'bg-yellow-500 text-white',
             info: 'bg-blue-500 text-white'
         };
-        
+
         toast.className += ` ${styles[type] || styles.info}`;
         toast.innerHTML = `
             <div class="flex items-center">
@@ -46,14 +46,14 @@ window.App = {
                 </button>
             </div>
         `;
-        
+
         document.body.appendChild(toast);
-        
+
         // Animación de entrada
         setTimeout(() => {
             toast.classList.remove('translate-x-full');
         }, 100);
-        
+
         // Auto-remove
         setTimeout(() => {
             toast.classList.add('translate-x-full');
@@ -61,7 +61,7 @@ window.App = {
         }, duration);
     },
 
-    getToastIcon: function(type) {
+    getToastIcon: function (type) {
         const icons = {
             success: 'check-circle',
             error: 'exclamation-circle',
@@ -72,23 +72,23 @@ window.App = {
     },
 
     // Inicializar sistema de toasts
-    initToasts: function() {
+    initToasts: function () {
         // Auto-hide existing messages
         this.autoHideMessages();
     },
 
     // Auto-ocultar mensajes del sistema (solo mensajes temporales, no estados permanentes)
-    autoHideMessages: function() {
+    autoHideMessages: function () {
         setTimeout(() => {
             const messages = document.querySelectorAll('[class*="bg-green-100"], [class*="bg-red-100"]');
             messages.forEach(message => {
                 // Solo ocultar mensajes que no sean de estado de firmas
-                const isStatusMessage = message.closest('.signatures-status') || 
-                                      message.textContent.includes('Firma registrada') ||
-                                      message.textContent.includes('Estado de firma') ||
-                                      message.textContent.includes('firmado') ||
-                                      message.textContent.includes('pendiente');
-                
+                const isStatusMessage = message.closest('.signatures-status') ||
+                    message.textContent.includes('Firma registrada') ||
+                    message.textContent.includes('Estado de firma') ||
+                    message.textContent.includes('firmado') ||
+                    message.textContent.includes('pendiente');
+
                 if (!isStatusMessage) {
                     message.style.transition = 'opacity 0.5s';
                     message.style.opacity = '0';
@@ -96,10 +96,10 @@ window.App = {
                 }
             });
         }, this.config.toastDuration);
-    }
+    },
 
     // Funcionalidades del sidebar
-    initSidebar: function() {
+    initSidebar: function () {
         // Restaurar estado del sidebar
         const sidebarCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
         if (sidebarCollapsed && window.innerWidth < 768) {
@@ -111,10 +111,10 @@ window.App = {
         this.markActiveLink();
     },
 
-    markActiveLink: function() {
+    markActiveLink: function () {
         const currentPath = window.location.search;
         const sidebarLinks = document.querySelectorAll('#sidebar a[href]');
-        
+
         sidebarLinks.forEach(link => {
             const href = link.getAttribute('href');
             if (href && currentPath.includes(href.split('?')[1])) {
@@ -125,7 +125,7 @@ window.App = {
     },
 
     // Funcionalidades de tablas
-    initTables: function() {
+    initTables: function () {
         // Hacer tablas responsive
         const tables = document.querySelectorAll('table');
         tables.forEach(table => {
@@ -139,7 +139,7 @@ window.App = {
     },
 
     // Funcionalidades de formularios
-    initForms: function() {
+    initForms: function () {
         // Validación en tiempo real
         const forms = document.querySelectorAll('form');
         forms.forEach(form => {
@@ -150,15 +150,15 @@ window.App = {
         this.enhanceInputs();
     },
 
-    handleFormSubmit: function(e) {
+    handleFormSubmit: function (e) {
         const form = e.target;
         const submitBtn = form.querySelector('button[type="submit"]');
-        
+
         if (submitBtn && !submitBtn.disabled) {
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Procesando...';
             submitBtn.disabled = true;
-            
+
             // Restaurar botón si hay error
             setTimeout(() => {
                 if (submitBtn.disabled) {
@@ -169,14 +169,14 @@ window.App = {
         }
     },
 
-    enhanceInputs: function() {
+    enhanceInputs: function () {
         // Mejorar campos de número de referencia
         const refInputs = document.querySelectorAll('input[name="numero_referencia"]');
         refInputs.forEach(input => {
-            input.addEventListener('input', function(e) {
+            input.addEventListener('input', function (e) {
                 const value = e.target.value.toUpperCase();
                 e.target.value = value;
-                
+
                 // Validación básica
                 const regex = /^[A-Z0-9-]*$/;
                 if (!regex.test(value)) {
@@ -191,7 +191,7 @@ window.App = {
     // Utilidades
     utils: {
         // Debounce function
-        debounce: function(func, wait) {
+        debounce: function (func, wait) {
             let timeout;
             return function executedFunction(...args) {
                 const later = () => {
@@ -204,7 +204,7 @@ window.App = {
         },
 
         // Copiar al portapapeles
-        copyToClipboard: function(text) {
+        copyToClipboard: function (text) {
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(text).then(() => {
                     App.showToast('Copiado al portapapeles', 'success', 2000);
@@ -216,7 +216,7 @@ window.App = {
             }
         },
 
-        fallbackCopyTextToClipboard: function(text) {
+        fallbackCopyTextToClipboard: function (text) {
             const textArea = document.createElement('textarea');
             textArea.value = text;
             textArea.style.position = 'fixed';
@@ -225,19 +225,19 @@ window.App = {
             document.body.appendChild(textArea);
             textArea.focus();
             textArea.select();
-            
+
             try {
                 document.execCommand('copy');
                 App.showToast('Copiado al portapapeles', 'success', 2000);
             } catch (err) {
                 App.showToast('Error al copiar', 'error', 2000);
             }
-            
+
             document.body.removeChild(textArea);
         },
 
         // Formatear fecha
-        formatDate: function(date) {
+        formatDate: function (date) {
             return new Intl.DateTimeFormat('es-ES', {
                 year: 'numeric',
                 month: '2-digit',
@@ -246,27 +246,27 @@ window.App = {
         },
 
         // Generar ID único
-        generateId: function() {
+        generateId: function () {
             return Date.now().toString(36) + Math.random().toString(36).substr(2);
         }
     },
 
     // Diálogos de confirmación
-    confirm: function(message, callback) {
+    confirm: function (message, callback) {
         if (confirm(message)) {
             callback();
         }
     },
 
     // Loading states
-    showLoading: function(element) {
+    showLoading: function (element) {
         if (element) {
             element.classList.add('loading');
             element.disabled = true;
         }
     },
 
-    hideLoading: function(element) {
+    hideLoading: function (element) {
         if (element) {
             element.classList.remove('loading');
             element.disabled = false;
@@ -278,7 +278,7 @@ window.App = {
 function toggleSubmenu(submenuId) {
     const submenu = document.getElementById(submenuId);
     const icon = document.getElementById(submenuId + '-icon');
-    
+
     if (submenu && icon) {
         if (submenu.classList.contains('hidden')) {
             submenu.classList.remove('hidden');
@@ -302,7 +302,7 @@ function toggleSidebar() {
 }
 
 // Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // App.init();
 });
 

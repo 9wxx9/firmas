@@ -1,13 +1,16 @@
 <?php
 
-class Firmante {
+class Firmante
+{
     private $pdo;
-    
-    public function __construct($pdo) {
+
+    public function __construct($pdo)
+    {
         $this->pdo = $pdo;
     }
-    
-    public function getAllFirmantes() {
+
+    public function getAllFirmantes()
+    {
         try {
             $sql = "
                 SELECT 
@@ -21,7 +24,7 @@ class Firmante {
                 GROUP BY f.id
                 ORDER BY f.nombre ASC
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -30,8 +33,9 @@ class Firmante {
             return [];
         }
     }
-    
-    public function getFirmanteById($id) {
+
+    public function getFirmanteById($id)
+    {
         try {
             $sql = "SELECT * FROM firmantes WHERE id = ? AND activo = 1";
             $stmt = $this->pdo->prepare($sql);
@@ -42,8 +46,9 @@ class Firmante {
             return false;
         }
     }
-    
-    public function getFirmanteByEmail($email) {
+
+    public function getFirmanteByEmail($email)
+    {
         try {
             $sql = "SELECT * FROM firmantes WHERE email = ? AND activo = 1";
             $stmt = $this->pdo->prepare($sql);
@@ -54,17 +59,18 @@ class Firmante {
             return false;
         }
     }
-    
-    public function existeEmail($email, $excludeId = null) {
+
+    public function existeEmail($email, $excludeId = null)
+    {
         try {
             $sql = "SELECT COUNT(*) FROM firmantes WHERE email = ? AND activo = 1";
             $params = [$email];
-            
+
             if ($excludeId) {
                 $sql .= " AND id != ?";
                 $params[] = $excludeId;
             }
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute($params);
             return $stmt->fetchColumn() > 0;
@@ -73,14 +79,15 @@ class Firmante {
             return false;
         }
     }
-    
-    public function createFirmante($data) {
+
+    public function createFirmante($data)
+    {
         try {
             $sql = "
                 INSERT INTO firmantes (nombre, cargo, email, telefono, departamento, activo, created_at)
                 VALUES (?, ?, ?, ?, ?, 1, NOW())
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $result = $stmt->execute([
                 $data['nombre'],
@@ -89,7 +96,7 @@ class Firmante {
                 $data['telefono'] ?? null,
                 $data['departamento'] ?? null
             ]);
-            
+
             if ($result) {
                 return $this->pdo->lastInsertId();
             }
@@ -99,15 +106,16 @@ class Firmante {
             return false;
         }
     }
-    
-    public function updateFirmante($id, $data) {
+
+    public function updateFirmante($id, $data)
+    {
         try {
             $sql = "
                 UPDATE firmantes 
                 SET nombre = ?, cargo = ?, email = ?, telefono = ?, departamento = ?, updated_at = NOW()
                 WHERE id = ?
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             return $stmt->execute([
                 $data['nombre'],
@@ -122,8 +130,9 @@ class Firmante {
             return false;
         }
     }
-    
-    public function deleteFirmante($id) {
+
+    public function deleteFirmante($id)
+    {
         try {
             // Marcar como inactivo en lugar de eliminar físicamente
             $stmt = $this->pdo->prepare("UPDATE firmantes SET activo = 0, updated_at = NOW() WHERE id = ?");
@@ -133,8 +142,9 @@ class Firmante {
             return false;
         }
     }
-    
-    public function activarFirmante($id) {
+
+    public function activarFirmante($id)
+    {
         try {
             $stmt = $this->pdo->prepare("UPDATE firmantes SET activo = 1, updated_at = NOW() WHERE id = ?");
             return $stmt->execute([$id]);
@@ -143,8 +153,9 @@ class Firmante {
             return false;
         }
     }
-    
-    public function searchFirmantes($query) {
+
+    public function searchFirmantes($query)
+    {
         try {
             $searchTerm = "%" . $query . "%";
             $sql = "
@@ -160,7 +171,7 @@ class Firmante {
                 GROUP BY f.id
                 ORDER BY f.nombre ASC
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$searchTerm, $searchTerm, $searchTerm, $searchTerm]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -169,15 +180,16 @@ class Firmante {
             return [];
         }
     }
-    
-    public function getFirmantesByDepartamento($departamento) {
+
+    public function getFirmantesByDepartamento($departamento)
+    {
         try {
             $sql = "
                 SELECT * FROM firmantes 
                 WHERE departamento = ? AND activo = 1
                 ORDER BY nombre ASC
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$departamento]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -186,8 +198,9 @@ class Firmante {
             return [];
         }
     }
-    
-    public function getDepartamentos() {
+
+    public function getDepartamentos()
+    {
         try {
             $sql = "
                 SELECT DISTINCT departamento 
@@ -195,7 +208,7 @@ class Firmante {
                 WHERE departamento IS NOT NULL AND departamento != '' AND activo = 1
                 ORDER BY departamento ASC
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -204,8 +217,9 @@ class Firmante {
             return [];
         }
     }
-    
-    public function getEstadisticasFirmantes() {
+
+    public function getEstadisticasFirmantes()
+    {
         try {
             $sql = "
                 SELECT 
@@ -214,7 +228,7 @@ class Firmante {
                     SUM(CASE WHEN activo = 0 THEN 1 ELSE 0 END) as inactivos
                 FROM firmantes
             ";
-            
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);

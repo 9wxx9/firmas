@@ -10,19 +10,19 @@ if (isset($_SESSION['error_message'])) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión</title>
     <link rel="stylesheet" href="assets/css/index.css">
 </head>
+
 <body>
     <main class="split">
         <section class="split-left">
             <div class="brand">Control Firmas</div>
             <div class="logo"></div>
-            <!-- <h1 class="headline">Bienvenido de nuevo</h1>
-            <p class="subtitle">Accede para gestionar tus firmas de forma sencilla y rápida.</p> -->
             <div class="shapes" aria-hidden="true">
                 <span class="blob blob-1"></span>
                 <span class="blob blob-2"></span>
@@ -47,8 +47,8 @@ if (isset($_SESSION['error_message'])) {
                         <label for="password">Contraseña</label>
                         <button type="button" class="toggle-password" aria-label="Mostrar u ocultar contraseña" title="Mostrar u ocultar contraseña">
                             <svg class="icon-eye" viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path d="M2.25 12s3.75-6.75 9.75-6.75S21.75 12 21.75 12 18 18.75 12 18.75 2.25 12 2.25 12Z" stroke="currentColor" stroke-width="1.5"/>
-                                <circle cx="12" cy="12" r="3.75" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M2.25 12s3.75-6.75 9.75-6.75S21.75 12 21.75 12 18 18.75 12 18.75 2.25 12 2.25 12Z" stroke="currentColor" stroke-width="1.5" />
+                                <circle cx="12" cy="12" r="3.75" stroke="currentColor" stroke-width="1.5" />
                             </svg>
                         </button>
                     </div>
@@ -63,4 +63,5 @@ if (isset($_SESSION['error_message'])) {
         </section>
     </main>
 </body>
+
 </html>

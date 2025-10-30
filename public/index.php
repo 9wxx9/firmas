@@ -14,7 +14,7 @@ try {
         case 'auth':
             require_once '../controllers/AuthController.php';
             $authController = new AuthController($pdo);
-            
+
             switch ($action) {
                 case 'login':
                     $authController->login();
@@ -30,16 +30,19 @@ try {
                     exit;
             }
             break;
-            
+
         case 'dashboard':
             // Verificar si el usuario está logueado
             if (!isset($_SESSION['user_id'])) {
                 header('Location: ../index.php');
                 exit;
             }
-            require_once '../views/dashboard/index.php';
+            // Usar el controlador para preparar los datos de la vista (ej. $total)
+            require_once '../controllers/dashboardController.php';
+            $dashboardController = new dashboardController($pdo);
+            $dashboardController->index();
             break;
-            
+
         case 'profile':
             // Verificar si el usuario está logueado
             if (!isset($_SESSION['user_id'])) {
@@ -48,7 +51,7 @@ try {
             }
             require_once '../controllers/profileController.php';
             $profileController = new ProfileController($pdo);
-            
+
             switch ($action) {
                 case 'show':
                     require_once '../views/profile/index.php';
@@ -91,7 +94,7 @@ try {
                     break;
             }
             break;
-            
+
         case 'libro':
             // Verificar si el usuario está logueado
             if (!isset($_SESSION['user_id'])) {
@@ -100,7 +103,7 @@ try {
             }
             require_once '../controllers/LibroController.php';
             $libroController = new LibroController();
-            
+
             switch ($action) {
                 case 'index':
                     $libroController->index();
@@ -134,7 +137,7 @@ try {
                     break;
             }
             break;
-            
+
         default:
             header('Location: ../index.php');
             exit;
@@ -142,4 +145,3 @@ try {
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
 }
-?>

@@ -17,11 +17,12 @@ if (isset($_SESSION['profile_message'])) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil - Control Firmas</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -29,6 +30,7 @@ if (isset($_SESSION['profile_message'])) {
     <!-- Custom CSS -->
     <link href="<?php echo $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/firmas/assets/css/main.css'; ?>" rel="stylesheet">
 </head>
+
 <body class="bg-gray-50">
     <div class="flex h-screen">
         <!-- Sidebar -->
@@ -52,16 +54,16 @@ if (isset($_SESSION['profile_message'])) {
             <div class="p-6">
                 <!-- Mensajes -->
                 <?php if ($message): ?>
-                <div class="mb-6 p-4 rounded-md <?php echo $messageType === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : ($messageType === 'error' ? 'bg-red-50 border border-red-200 text-red-800' : 'bg-blue-50 border border-blue-200 text-blue-800'); ?>">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <i class="fas <?php echo $messageType === 'success' ? 'fa-check-circle' : ($messageType === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'); ?>"></i>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm font-medium"><?php echo htmlspecialchars($message); ?></p>
+                    <div class="mb-6 p-4 rounded-md <?php echo $messageType === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : ($messageType === 'error' ? 'bg-red-50 border border-red-200 text-red-800' : 'bg-blue-50 border border-blue-200 text-blue-800'); ?>">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas <?php echo $messageType === 'success' ? 'fa-check-circle' : ($messageType === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'); ?>"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium"><?php echo htmlspecialchars($message); ?></p>
+                            </div>
                         </div>
                     </div>
-                </div>
                 <?php endif; ?>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -76,35 +78,35 @@ if (isset($_SESSION['profile_message'])) {
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label for="nombre" class="block text-sm font-medium text-gray-700 mb-2">Nombre Completo</label>
-                                            <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($user['nombre'] ?? ''); ?>" 
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                                            <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($user['nombre'] ?? ''); ?>"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
                                         </div>
-                                        
+
                                         <div>
                                             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Correo Electrónico</label>
-                                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" 
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
                                         </div>
-                                        
+
                                         <div>
                                             <label for="telefono" class="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
-                                            <input type="tel" id="telefono" name="telefono" value="<?php echo htmlspecialchars($user['telefono'] ?? ''); ?>" 
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            <input type="tel" id="telefono" name="telefono" value="<?php echo htmlspecialchars($user['telefono'] ?? ''); ?>"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                         </div>
-                                        
+
                                         <div>
                                             <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Usuario</label>
-                                            <input type="text" id="username" value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>" 
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50" disabled>
+                                            <input type="text" id="username" value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50" disabled>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="mt-6">
                                         <label for="direccion" class="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
-                                        <textarea id="direccion" name="direccion" rows="3" 
-                                                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><?php echo htmlspecialchars($user['direccion'] ?? ''); ?></textarea>
+                                        <textarea id="direccion" name="direccion" rows="3"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><?php echo htmlspecialchars($user['direccion'] ?? ''); ?></textarea>
                                     </div>
-                                    
+
                                     <div class="mt-6 flex justify-end">
                                         <button type="submit" class="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                             <i class="fas fa-save mr-2"></i>Guardar Cambios
@@ -125,8 +127,8 @@ if (isset($_SESSION['profile_message'])) {
                             <div class="p-6 text-center">
                                 <div class="mb-4">
                                     <?php if (!empty($user['avatar'])): ?>
-                                        <img src="<?php echo $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/firmas/uploads/avatars/' . htmlspecialchars($user['avatar']); ?>" 
-                                             alt="Avatar" class="w-24 h-24 rounded-full mx-auto object-cover border-4 border-gray-200">
+                                        <img src="<?php echo $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/firmas/uploads/avatars/' . htmlspecialchars($user['avatar']); ?>"
+                                            alt="Avatar" class="w-24 h-24 rounded-full mx-auto object-cover border-4 border-gray-200">
                                     <?php else: ?>
                                         <div class="w-24 h-24 rounded-full mx-auto bg-gray-200 flex items-center justify-center">
                                             <i class="fas fa-user text-3xl text-gray-500"></i>
@@ -135,8 +137,8 @@ if (isset($_SESSION['profile_message'])) {
                                 </div>
                                 <form id="avatarForm" method="POST" action="index.php?controller=profile&action=upload_picture" enctype="multipart/form-data">
                                     <input type="file" id="avatar" name="avatar" accept="image/*" class="hidden" onchange="previewAvatar(this)">
-                                    <button type="button" onclick="document.getElementById('avatar').click()" 
-                                            class="px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                    <button type="button" onclick="document.getElementById('avatar').click()"
+                                        class="px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                                         <i class="fas fa-camera mr-2"></i>Cambiar Foto
                                     </button>
                                 </form>
@@ -161,8 +163,8 @@ if (isset($_SESSION['profile_message'])) {
                                         <p class="text-sm text-gray-900"><?php echo date('d/m/Y', strtotime($user['created_at'] ?? 'now')); ?></p>
                                     </div>
                                     <div class="pt-4">
-                                        <button type="button" onclick="openPasswordModal()" 
-                                                class="w-full px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                                        <button type="button" onclick="openPasswordModal()"
+                                            class="w-full px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
                                             <i class="fas fa-key mr-2"></i>Cambiar Contraseña
                                         </button>
                                     </div>
@@ -188,27 +190,27 @@ if (isset($_SESSION['profile_message'])) {
                             <div>
                                 <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Contraseña Actual</label>
                                 <input type="password" id="current_password" name="current_password" required
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             </div>
                             <div>
                                 <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">Nueva Contraseña</label>
                                 <input type="password" id="new_password" name="new_password" required
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             </div>
                             <div>
                                 <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">Confirmar Nueva Contraseña</label>
                                 <input type="password" id="confirm_password" name="confirm_password" required
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             </div>
                         </div>
                     </div>
                     <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
-                        <button type="button" onclick="closePasswordModal()" 
-                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <button type="button" onclick="closePasswordModal()"
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             Cancelar
                         </button>
-                        <button type="submit" 
-                                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <button type="submit"
+                            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             Cambiar Contraseña
                         </button>
                     </div>
@@ -245,13 +247,13 @@ if (isset($_SESSION['profile_message'])) {
         document.getElementById('passwordForm').addEventListener('submit', function(e) {
             const newPassword = document.getElementById('new_password').value;
             const confirmPassword = document.getElementById('confirm_password').value;
-            
+
             if (newPassword !== confirmPassword) {
                 e.preventDefault();
                 alert('Las contraseñas no coinciden');
                 return false;
             }
-            
+
             if (newPassword.length < 6) {
                 e.preventDefault();
                 alert('La contraseña debe tener al menos 6 caracteres');
@@ -267,4 +269,5 @@ if (isset($_SESSION['profile_message'])) {
         });
     </script>
 </body>
+
 </html>

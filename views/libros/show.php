@@ -12,7 +12,7 @@ if (isset($_SESSION['debug_data'])) {
     echo "Firmantes: " . implode(', ', $_SESSION['debug_data']['firmantes']) . "<br>";
     echo "Hora: " . $_SESSION['debug_data']['timestamp'];
     echo "</div>";
-    
+
     unset($_SESSION['debug_data']);
 }
 
@@ -22,7 +22,7 @@ if (isset($_SESSION['message'])) {
           padding: 10px; margin: 10px; border: 2px solid " . ($_SESSION['message_type'] === 'success' ? 'green' : 'red') . ";'>";
     echo $_SESSION['message'];
     echo "</div>";
-    
+
     unset($_SESSION['message']);
     unset($_SESSION['message_type']);
 }
@@ -35,6 +35,7 @@ $pageTitle = 'Detalles del Libro';
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,11 +44,12 @@ $pageTitle = 'Detalles del Libro';
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-gray-50">
     <div class="flex h-screen">
         <!-- Sidebar -->
         <?php include __DIR__ . '/../../includes/sidebar.php'; ?>
-        
+
         <!-- Main Content -->
         <div class="main-content flex-1 flex flex-col overflow-hidden">
             <!-- Header -->
@@ -55,8 +57,8 @@ $pageTitle = 'Detalles del Libro';
                 <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between items-center">
                         <div class="flex items-center space-x-4">
-                            <a href="index.php?controller=libro&action=index" 
-                               class="text-gray-600 hover:text-gray-900 transition duration-200">
+                            <a href="index.php?controller=libro&action=index"
+                                class="text-gray-600 hover:text-gray-900 transition duration-200">
                                 <i class="fas fa-arrow-left"></i>
                             </a>
                             <h1 class="text-2xl font-bold text-gray-900">
@@ -65,27 +67,27 @@ $pageTitle = 'Detalles del Libro';
                             </h1>
                         </div>
                         <div class="flex space-x-2">
-                            <a href="index.php?controller=libro&action=edit&id=<?php echo $libro['id']; ?>" 
-                               class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center">
+                            <a href="index.php?controller=libro&action=edit&id=<?php echo $libro['id']; ?>"
+                                class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center">
                                 <i class="fas fa-edit mr-2"></i>
                                 Editar
                             </a>
-                            <button onclick="toggleAssignModal()" 
-                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center">
+                            <button onclick="toggleAssignModal()"
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center">
                                 <i class="fas fa-user-plus mr-2"></i>
                                 Asignar Firmantes
                             </button>
-                            
-                            
+
+
                         </div>
                     </div>
                 </div>
             </header>
-            
+
             <!-- Content -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    
+
                     <!-- Messages -->
                     <?php if (isset($_SESSION['message'])): ?>
                         <div class="mb-4 p-4 rounded-lg <?php echo $_SESSION['message_type'] === 'success' ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300'; ?>">
@@ -96,7 +98,7 @@ $pageTitle = 'Detalles del Libro';
                         </div>
                         <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
                     <?php endif; ?>
-                    
+
                     <!-- Book Info -->
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -107,14 +109,23 @@ $pageTitle = 'Detalles del Libro';
                             <div>
                                 <label class="block text-sm font-medium text-gray-500 mb-1">Mes/Año</label>
                                 <p class="text-lg text-gray-900">
-                                    <?php 
+                                    <?php
                                     $meses = [
-                                        '01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril',
-                                        '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio', '08' => 'Agosto',
-                                        '09' => 'Septiembre', '10' => 'Octubre', '11' => 'Noviembre', '12' => 'Diciembre'
+                                        '01' => 'Enero',
+                                        '02' => 'Febrero',
+                                        '03' => 'Marzo',
+                                        '04' => 'Abril',
+                                        '05' => 'Mayo',
+                                        '06' => 'Junio',
+                                        '07' => 'Julio',
+                                        '08' => 'Agosto',
+                                        '09' => 'Septiembre',
+                                        '10' => 'Octubre',
+                                        '11' => 'Noviembre',
+                                        '12' => 'Diciembre'
                                     ];
                                     $mesNombre = $meses[$libro['mes']] ?? $libro['mes'];
-                                    echo $mesNombre . ' ' . $libro['año']; 
+                                    echo $mesNombre . ' ' . $libro['año'];
                                     ?>
                                 </p>
                             </div>
@@ -127,7 +138,7 @@ $pageTitle = 'Detalles del Libro';
                                 <p class="text-lg text-gray-900"><?php echo date('d/m/Y', strtotime($libro['created_at'])); ?></p>
                             </div>
                         </div>
-                        
+
                         <?php if (!empty($libro['descripcion'])): ?>
                             <div class="mt-6">
                                 <label class="block text-sm font-medium text-gray-500 mb-2">Descripción</label>
@@ -135,22 +146,24 @@ $pageTitle = 'Detalles del Libro';
                             </div>
                         <?php endif; ?>
                     </div>
-                    
+
                     <!-- Signatures Status -->
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">
                             <i class="fas fa-chart-pie mr-2 text-blue-600"></i>
                             Estado de Firmas
                         </h2>
-                        
+
                         <?php if (!empty($firmas)): ?>
-                            <?php 
+                            <?php
                             $totalFirmas = count($firmas);
-                            $firmasCompletadas = count(array_filter($firmas, function($f) { return $f['estado'] === 'firmado'; }));
+                            $firmasCompletadas = count(array_filter($firmas, function ($f) {
+                                return $f['estado'] === 'firmado';
+                            }));
                             $firmasPendientes = $totalFirmas - $firmasCompletadas;
                             $porcentaje = $totalFirmas > 0 ? ($firmasCompletadas / $totalFirmas) * 100 : 0;
                             ?>
-                            
+
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                                 <div class="bg-blue-50 rounded-lg p-4">
                                     <div class="flex items-center">
@@ -163,7 +176,7 @@ $pageTitle = 'Detalles del Libro';
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="bg-green-50 rounded-lg p-4">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0">
@@ -175,7 +188,7 @@ $pageTitle = 'Detalles del Libro';
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="bg-red-50 rounded-lg p-4">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0">
@@ -188,15 +201,15 @@ $pageTitle = 'Detalles del Libro';
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-4">
                                 <div class="flex justify-between text-sm text-gray-600 mb-1">
                                     <span>Progreso</span>
                                     <span><?php echo number_format($porcentaje, 1); ?>%</span>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-3">
-                                    <div class="bg-green-600 h-3 rounded-full transition-all duration-300" 
-                                         style="width: <?php echo $porcentaje; ?>%"></div>
+                                    <div class="bg-green-600 h-3 rounded-full transition-all duration-300"
+                                        style="width: <?php echo $porcentaje; ?>%"></div>
                                 </div>
                             </div>
                         <?php else: ?>
@@ -207,7 +220,7 @@ $pageTitle = 'Detalles del Libro';
                             </div>
                         <?php endif; ?>
                     </div>
-                    
+
                     <!-- Signatures List -->
                     <?php if (!empty($firmas)): ?>
                         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -217,7 +230,7 @@ $pageTitle = 'Detalles del Libro';
                                     Lista de Firmantes
                                 </h2>
                             </div>
-                            
+
                             <div class="overflow-x-auto">
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50">
@@ -290,9 +303,9 @@ $pageTitle = 'Detalles del Libro';
                                                             <input type="hidden" name="firma_id" value="<?php echo $firma['id']; ?>">
                                                             <input type="hidden" name="nuevo_estado" value="firmado">
                                                             <input type="hidden" name="redirect" value="index.php?controller=libro&action=show&id=<?php echo $libro['id']; ?>">
-                                                            <button type="submit" 
-                                                                    class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition duration-200 flex items-center"
-                                                                    onclick="return confirm('¿Confirmar la firma de <?php echo htmlspecialchars($firma['firmante_nombre']); ?>?')">
+                                                            <button type="submit"
+                                                                class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition duration-200 flex items-center"
+                                                                onclick="return confirm('¿Confirmar la firma de <?php echo htmlspecialchars($firma['firmante_nombre']); ?>?')">
                                                                 <i class="fas fa-pen mr-1"></i>
                                                                 Firmar
                                                             </button>
@@ -323,104 +336,105 @@ $pageTitle = 'Detalles del Libro';
         🐛 Debug Firmantes
     </button>
 </div> -->
-    
-<!-- Assign Signatories Modal -->
-<div id="assignModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
-    <div class="flex items-center justify-center min-h-screen px-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Asignar Firmantes</h3>
-            </div>
-            
-            <form method="POST" action="index.php?controller=libro&action=asignarFirmantes" id="assignForm">
-                <input type="hidden" name="libro_id" id="form_libro_id" value="<?php echo $libro['id']; ?>">
-                
-                <div class="px-6 py-4 max-h-96 overflow-y-auto" id="firmantesContainer">
-                    <?php if (!empty($firmantes)): ?>
-                        <?php foreach ($firmantes as $firmante): ?>
-                            <div class="flex items-center mb-3">
-                                <input type="checkbox" 
-                                       name="firmantes[]" 
-                                       value="<?php echo $firmante['id']; ?>"
-                                       id="firmante_<?php echo $firmante['id']; ?>"
-                                       class="firmante-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                <label for="firmante_<?php echo $firmante['id']; ?>" class="ml-3 flex-1">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        <?php echo htmlspecialchars($firmante['nombre']); ?>
-                                    </div>
-                                    <div class="text-xs text-gray-500">
-                                        <?php echo htmlspecialchars($firmante['departamento']); ?>
-                                    </div>
-                                </label>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="text-gray-500 text-center py-4">No hay firmantes disponibles</p>
-                    <?php endif; ?>
+
+    <!-- Assign Signatories Modal -->
+    <div id="assignModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Asignar Firmantes</h3>
                 </div>
-                
-                <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
-                    <button type="button" 
-                            onclick="toggleAssignModal()" 
+
+                <form method="POST" action="index.php?controller=libro&action=asignarFirmantes" id="assignForm">
+                    <input type="hidden" name="libro_id" id="form_libro_id" value="<?php echo $libro['id']; ?>">
+
+                    <div class="px-6 py-4 max-h-96 overflow-y-auto" id="firmantesContainer">
+                        <?php if (!empty($firmantes)): ?>
+                            <?php foreach ($firmantes as $firmante): ?>
+                                <div class="flex items-center mb-3">
+                                    <input type="checkbox"
+                                        name="firmantes[]"
+                                        value="<?php echo $firmante['id']; ?>"
+                                        id="firmante_<?php echo $firmante['id']; ?>"
+                                        class="firmante-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="firmante_<?php echo $firmante['id']; ?>" class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            <?php echo htmlspecialchars($firmante['nombre']); ?>
+                                        </div>
+                                        <div class="text-xs text-gray-500">
+                                            <?php echo htmlspecialchars($firmante['departamento']); ?>
+                                        </div>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p class="text-gray-500 text-center py-4">No hay firmantes disponibles</p>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+                        <button type="button"
+                            onclick="toggleAssignModal()"
                             class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition duration-200">
-                        Cancelar
-                    </button>
-                    <button type="submit" 
+                            Cancelar
+                        </button>
+                        <button type="submit"
                             id="submitBtn"
                             class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition duration-200">
-                        Asignar Seleccionados
-                    </button>
-                    
-                    
-                </div>
-            </form>
+                            Asignar Seleccionados
+                        </button>
+
+
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- JavaScript Mejorado -->
-<script>
-// ENVÍO REAL CON VISUALIZACIÓN DE RESPUESTA
-document.addEventListener('DOMContentLoaded', function() {
-    const assignForm = document.getElementById('assignForm');
-    
-    if (assignForm) {
-        assignForm.addEventListener('submit', function(e) {
-            console.log('=== 🚀 ENVIANDO FORMULARIO ===');
-            
-            // MOSTRAR LOADING
-            const submitBtn = this.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Asignando...';
-                submitBtn.classList.add('opacity-50');
+    <!-- JavaScript Mejorado -->
+    <script>
+        // ENVÍO REAL CON VISUALIZACIÓN DE RESPUESTA
+        document.addEventListener('DOMContentLoaded', function() {
+            const assignForm = document.getElementById('assignForm');
+
+            if (assignForm) {
+                assignForm.addEventListener('submit', function(e) {
+                    console.log('=== 🚀 ENVIANDO FORMULARIO ===');
+
+                    // MOSTRAR LOADING
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Asignando...';
+                        submitBtn.classList.add('opacity-50');
+                    }
+
+                    // NO prevenir el envío - queremos ver qué responde el servidor
+                    console.log('✅ Formulario enviándose al servidor...');
+                });
             }
-            
-            // NO prevenir el envío - queremos ver qué responde el servidor
-            console.log('✅ Formulario enviándose al servidor...');
         });
-    }
-});
 
-// Función de debug
-window.debugFirmantes = function() {
-    const form = document.getElementById('assignForm');
-    const libroId = document.getElementById('form_libro_id')?.value;
-    const checkedBoxes = document.querySelectorAll('input[name="firmantes[]"]:checked');
-    
-    console.log('📖 Libro ID:', libroId);
-    console.log('✅ Firmantes seleccionados:', checkedBoxes.length);
-    console.log('🔢 Valores:', Array.from(checkedBoxes).map(cb => cb.value));
-    
-    return false;
-}
+        // Función de debug
+        window.debugFirmantes = function() {
+            const form = document.getElementById('assignForm');
+            const libroId = document.getElementById('form_libro_id')?.value;
+            const checkedBoxes = document.querySelectorAll('input[name="firmantes[]"]:checked');
 
-function toggleAssignModal() {
-    const modal = document.getElementById('assignModal');
-    if (modal) {
-        modal.classList.toggle('hidden');
-    }
-}
-</script>
+            console.log('📖 Libro ID:', libroId);
+            console.log('✅ Firmantes seleccionados:', checkedBoxes.length);
+            console.log('🔢 Valores:', Array.from(checkedBoxes).map(cb => cb.value));
+
+            return false;
+        }
+
+        function toggleAssignModal() {
+            const modal = document.getElementById('assignModal');
+            if (modal) {
+                modal.classList.toggle('hidden');
+            }
+        }
+    </script>
 </body>
+
 </html>
