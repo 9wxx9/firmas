@@ -80,7 +80,7 @@ $pageTitle = 'Gestión de diarios y trabajo';
                                     <?php endif; ?>
                                 </p>
                                 <p class="mt-1 text-sm <?php echo $esAdmin ? 'text-green-700' : 'text-yellow-700'; ?>">
-                                    Total: <strong><?php echo $totalLibros; ?></strong> libro(s)
+                                    Total: <strong><?php echo $totalLibros; ?></strong> Diario(s)
                                     <?php if (!$esAdmin && $totalLibros === 0): ?>
                                         - 🎉 ¡Estás al día con tus firmas!
                                     <?php endif; ?>
@@ -350,7 +350,7 @@ $pageTitle = 'Gestión de diarios y trabajo';
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
     <script src="<?php echo $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/firmas/'; ?>assets/js/app.js"></script>
-    <script>
+    <script>  
         document.addEventListener('DOMContentLoaded', function() {
             const tableEl = document.querySelector('#libros-table');
             if (!tableEl) return;
@@ -373,6 +373,15 @@ $pageTitle = 'Gestión de diarios y trabajo';
                     }
                 }]
             });
+
+            const userRole = "<?php echo $_SESSION['rol']; ?>";
+
+            // Mostrar mensaje de bienvenida
+           if (typeof App !== 'undefined' && App.showToast && userRole === 'usuario') {
+    setTimeout(() => {
+        App.showToast('¡Bienvenid@ de nuevo!', 'success');
+    }, 1000);
+}
 
             const styleButtons = () => {
                 document.querySelectorAll('.dt-button, .buttons-html5').forEach(btn => {

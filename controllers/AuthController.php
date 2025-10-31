@@ -39,12 +39,20 @@ class AuthController
                     setcookie('remember_token', $token, time() + (30 * 24 * 60 * 60), '/', '', false, true); // 30 días
                 }
 
-                // Redirigir al dashboard
+           // 🎯 REDIRIGIR SEGÚN EL ROL
+            $rolLower = strtolower($user['rol']);
+            if ($rolLower === 'admin' || $rolLower === 'administrador') {
+                // Admin va al dashboard
                 header('Location: index.php?controller=dashboard');
-                exit;
             } else {
-                $this->redirectWithError('Usuario o contraseña incorrectos.');
+                // Usuarios normales van directo a sus libros
+                header('Location: index.php?controller=libro&action=index');
             }
+            exit;
+            
+        } else {
+            $this->redirectWithError('Usuario o contraseña incorrectos.');
+        }
         } else {
             // Si no es POST, redirigir al login
             header('Location: ../index.php');

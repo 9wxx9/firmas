@@ -345,7 +345,7 @@
             // Mostrar mensaje de bienvenida
             if (typeof App !== 'undefined' && App.showToast) {
                 setTimeout(() => {
-                    App.showToast('¡Bienvenido al dashboard! Todas las funcionalidades han sido restauradas.', 'success');
+                    App.showToast('¡Bienvenid@ de nuevo.', 'success');
                 }, 1000);
             }
         });

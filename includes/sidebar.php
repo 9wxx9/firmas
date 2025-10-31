@@ -25,37 +25,15 @@
         <!-- Navigation Menu -->
         <ul class="flex flex-col space-y-1 px-3">
             <!-- Dashboard -->
+
+            <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin'): ?>
             <li>
                 <a class="flex items-center px-3 py-2 text-gray-700 bg-blue-100 rounded-md hover:bg-blue-200 transition-colors" href="index.php?controller=dashboard">
                     <i class="fas fa-tachometer-alt mr-2"></i>
                     Dashboard
                 </a>
             </li>
-
-            <!-- Firmas
-            <li>
-                <button class="w-full flex items-center justify-between px-3 py-2 text-gray-700 hover:bg-gray-200 rounded-md transition-colors" onclick="toggleSubmenu('firmasSubmenu')">
-                    <div class="flex items-center">
-                        <i class="fas fa-pen-fancy mr-2"></i>
-                        Gestión de Firmas
-                    </div>
-                    <i class="fas fa-chevron-down transform transition-transform" id="firmasSubmenu-icon"></i>
-                </button>
-                <div class="hidden ml-6 mt-1 space-y-1" id="firmasSubmenu">
-                    <a class="block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded" href="index.php?controller=firma&action=create">
-                        <i class="fas fa-plus mr-2"></i>
-                        Nueva Firma
-                    </a>
-                    <a class="block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded" href="index.php?controller=firma&action=mis_firmas">
-                        <i class="fas fa-list mr-2"></i>
-                        Mis Firmas
-                    </a>
-                    <a class="block px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded" href="index.php?controller=firma&action=buscar">
-                        <i class="fas fa-search mr-2"></i>
-                        Buscar Firmas
-                    </a>
-                </div>
-            </li> -->
+            <?php endif; ?>
 
             <!-- Libros -->
             <li>
